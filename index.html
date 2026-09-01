@@ -150,63 +150,56 @@
 
         // 點擊登入時，才去背景抓取成績與密碼進行驗證
         async function handleLogin() {
-            let selectedAccount = document.getElementById('user-select').value;
-            let passwordInput = document.getElementById('password-input').value.trim();
+    let selectedAccount = document.getElementById('user-select').value;
+    let passwordInput = document.getElementById('password-input').value.trim();
 
-            if (!selectedAccount) {
-                alert("請先選擇您的帳號！");
-                return;
-            }
-            if (!passwordInput) {
-                alert("請輸入密碼！");
-                return;
-            }
+    if (!selectedAccount) {
+        alert("請先選擇您的帳號！");
+        return;
+    }
+    if (!passwordInput) {
+        alert("請輸入密碼！");
+        return;
+    }
 
-            // 顯示載入中提示
-            let loginBtn = document.querySelector("#login-box button");
-            let originalText = loginBtn.innerHTML;
-            loginBtn.innerHTML = "<span>⏳</span> 驗證與載入成績中...";
-            loginBtn.disabled = true;
+    try {
+        if (!globalData) {
+            let res = await fetch(API_URL);
+            globalData = await res.json();
+        }
 
-            try {
-                if (!globalData) {
-                    let res = await fetch(API_URL);
-                    globalData = await res.json();
-                }
+        let accounts = globalData.accounts;
+        let isValid = false;
+        let studentName = "";
 
-                // 從 Google 試算表的 accounts 資料中比對密碼
-                let accounts = globalData.accounts;
-                let isValid = false;
-                let studentName = "";
+        // 從第 1 列開始讀取（跳過標題）
+        // 假設 A欄 (accounts[i][0]) 是 "01李岱臻"，B欄 (accounts[i][1]) 是密碼
+        for (let i = 1; i < accounts.length; i++) {
+            let dbAccountFull = String(accounts[i][0]).trim(); // 例如 "01李岱臻"
+            let dbPassword = String(accounts[i][1]).trim();     // 密碼
 
-                for (let i = 1; i < accounts.length; i++) {
-                    // 假設 accounts[i][1] 是帳號(座號)，accounts[i][2] 是密碼
-                    if (String(accounts[i][1]).padStart(2, '0') === String(selectedAccount).padStart(2, '0') && 
-                        String(accounts[i][2]).trim() === passwordInput) {
-                        isValid = true;
-                        studentName = accounts[i][0]; // 抓取試算表上的正式命名
-                        break;
-                    }
-                }
-
-                if (isValid) {
-                    currentUser = { account: selectedAccount, name: studentName };
-                    document.getElementById('login-box').classList.add('hidden');
-                    document.getElementById('dashboard').classList.remove('hidden');
-                    document.getElementById('welcome-msg').textContent = `歡迎回來，${studentName} 同學！`;
-                    initDashboard();
-                } else {
-                    alert("密碼錯誤，請重新輸入！");
-                    loginBtn.innerHTML = originalText;
-                    loginBtn.disabled = false;
-                }
-            } catch (err) {
-                alert("連線至資料庫失敗，請稍後再試！");
-                console.error(err);
-                loginBtn.innerHTML = originalText;
-                loginBtn.disabled = false;
+            // 檢查 A 欄開頭是否包含選取的座號（例如 "01"）
+            if (dbAccountFull.startsWith(selectedAccount) && dbPassword === passwordInput) {
+                isValid = true;
+                studentName = dbAccountFull;
+                break;
             }
         }
+
+        if (isValid) {
+            currentUser = { account: selectedAccount, name: studentName };
+            document.getElementById('login-box').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            document.getElementById('welcome-msg').textContent = `歡迎回來，${studentName} 同學！`;
+            initDashboard();
+        } else {
+            alert("密碼錯誤，請重新輸入！");
+        }
+    } catch (err) {
+        alert("連線至資料庫失敗！");
+        console.error(err);
+    }
+}
 
         function initDashboard() {
             let examSelect = document.getElementById('exam-select');
