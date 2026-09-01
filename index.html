@@ -22,90 +22,85 @@
         .animate-bounce-slow { animation: bounce-slow 2s ease-in-out infinite; }
     </style>
 </head>
-<body class="bg-amber-50/60 min-h-screen p-4 sm:p-8 relative overflow-x-hidden">
+<body class="bg-amber-50/60 min-h-screen p-3 sm:p-6 relative overflow-x-hidden">
 
-    <div class="absolute top-4 left-6 hidden md:flex items-center gap-2 bg-emerald-100 px-4 py-2 rounded-full border border-emerald-300 shadow-sm animate-float">
-        <span class="text-xl">🌱</span>
-        <span class="font-bold text-emerald-800 text-sm">一同關心學習進程！</span>
-    </div>
-    <div class="absolute top-4 right-6 hidden md:flex items-center gap-2 bg-rose-100 px-4 py-2 rounded-full border border-rose-300 shadow-sm animate-float" style="animation-delay: 1.5s;">
-        <span class="text-xl">🌸</span>
-        <span class="font-bold text-rose-800 text-sm">深呼吸，快樂成長最重要～</span>
-    </div>
-
-    <div class="max-w-4xl mx-auto bg-white/90 backdrop-blur-md rounded-3xl shadow-xl overflow-hidden p-6 sm:p-10 border-4 border-amber-200 relative my-4">
+    <div class="max-w-xl mx-auto bg-white/95 backdrop-blur-md rounded-3xl shadow-xl overflow-hidden p-4 sm:p-8 border-4 border-amber-200 relative my-2">
         
-        <div class="text-center mb-6">
-            <div class="flex justify-center items-center gap-3 mb-2">
-                <span class="text-4xl animate-bounce-slow">🌿</span>
-                <h1 class="text-2xl sm:text-4xl font-extrabold text-amber-900 font-fun tracking-wide">
-                    文化國中704段考成績查詢與成長分析
+        <div class="text-center mb-5">
+            <div class="flex justify-center items-center gap-2 mb-1">
+                <span class="text-3xl animate-bounce-slow">🌿</span>
+                <h1 class="text-xl sm:text-3xl font-extrabold text-amber-900 font-fun tracking-wide">
+                    文化國中704段考成績查詢
                 </h1>
-                <span class="text-4xl animate-bounce-slow" style="animation-delay: 1s;">🌸</span>
+                <span class="text-3xl animate-bounce-slow" style="animation-delay: 1s;">🌸</span>
             </div>
-            <p class="text-gray-600 text-sm sm:text-base">輕鬆掌握學習狀況，給孩子大大的鼓勵與支持！</p>
+            <p class="text-gray-600 text-xs sm:text-sm">一同關心孩子的學習，快樂成長！</p>
         </div>
 
         <!-- 登入表單 -->
-        <div id="login-box" class="space-y-5 max-w-md mx-auto bg-gradient-to-b from-amber-50/80 to-emerald-50/50 p-6 sm:p-8 rounded-2xl border-2 border-amber-300 shadow-inner relative">
-            <div class="absolute -top-6 -left-6 bg-white border-2 border-emerald-400 px-3 py-1.5 rounded-2xl shadow-md transform -rotate-6 text-xs font-bold text-emerald-700 flex items-center gap-1">
-                <span>🍃 嗨！今天心情好嗎？</span>
-            </div>
-
+        <div id="login-box" class="space-y-4 max-w-sm mx-auto bg-gradient-to-b from-amber-50/80 to-emerald-50/50 p-5 rounded-2xl border-2 border-amber-300 shadow-inner relative">
             <div>
-                <label class="block text-amber-900 font-bold mb-2 flex items-center gap-2">
-                    <span>🌱</span> 選擇您的帳號（座號與姓名）：
+                <label class="block text-amber-900 font-bold mb-1.5 text-sm flex items-center gap-1.5">
+                    <span>🌱</span> 選擇您的帳號：
                 </label>
-                <select id="user-select" class="w-full border-2 border-amber-200 rounded-xl p-3 bg-white focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition font-medium">
+                <select id="user-select" class="w-full border-2 border-amber-200 rounded-xl p-2.5 bg-white focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition text-sm font-medium">
                     <option value="">-- 請選擇您的身分 --</option>
                 </select>
             </div>
             <div>
-                <label class="block text-amber-900 font-bold mb-2 flex items-center gap-2">
-                    <span>🌸</span> 請輸入密碼（身分證後5碼）：
+                <label class="block text-amber-900 font-bold mb-1.5 text-sm flex items-center gap-1.5">
+                    <span>🌸</span> 請輸入密碼：
                 </label>
-                <input type="password" id="password-input" class="w-full border-2 border-amber-200 rounded-xl p-3 bg-white focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition" placeholder="例如：12345">
+                <input type="password" id="password-input" class="w-full border-2 border-amber-200 rounded-xl p-2.5 bg-white focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition text-sm" placeholder="請輸入密碼">
             </div>
-            <button onclick="handleLogin()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3.5 rounded-xl transition shadow-md transform hover:-translate-y-0.5 text-lg font-fun tracking-wider flex items-center justify-center gap-2">
-                <span>🚀</span> 學習成果查詢
+            <button onclick="handleLogin()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3 rounded-xl transition shadow-md text-base font-fun tracking-wider flex items-center justify-center gap-2">
+                <span>🚀</span> 檢視學習成果
             </button>
         </div>
 
         <!-- 查詢後的儀表板 -->
-        <div id="dashboard" class="hidden space-y-8 mt-4">
-            <div class="flex justify-between items-center border-b-2 border-amber-100 pb-4">
-                <div class="flex items-center gap-3">
-                    <span class="text-3xl">🌻</span>
-                    <h2 id="welcome-msg" class="text-xl sm:text-2xl font-bold text-amber-900 font-fun"></h2>
+        <div id="dashboard" class="hidden space-y-6 mt-2">
+            <div class="flex justify-between items-center border-b-2 border-amber-100 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">🌻</span>
+                    <h2 id="welcome-msg" class="text-base sm:text-xl font-bold text-amber-900 font-fun"></h2>
                 </div>
-                <button onclick="location.reload()" class="bg-rose-400 hover:bg-rose-500 text-white px-4 py-2 rounded-xl text-sm font-bold transition shadow-sm flex items-center gap-1">
+                <button onclick="location.reload()" class="bg-rose-400 hover:bg-rose-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-1">
                     <span>🚪</span> 登出
                 </button>
             </div>
 
-            <div class="bg-gradient-to-r from-amber-50/80 via-emerald-50/60 to-sky-50/80 border-2 border-emerald-300 p-5 sm:p-6 rounded-2xl shadow-sm relative">
-                <div class="absolute -top-3 right-4 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+            <!-- 分析卡片 -->
+            <div class="bg-gradient-to-r from-amber-50/80 via-emerald-50/60 to-sky-50/80 border-2 border-emerald-300 p-4 rounded-2xl shadow-sm relative space-y-3">
+                <div class="absolute -top-3 right-4 bg-emerald-500 text-white text-xs font-bold px-3 py-0.5 rounded-full shadow">
                     ✨ AI 分析報告
                 </div>
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
-                    <h3 class="font-bold text-emerald-900 text-lg flex items-center gap-2">
-                        <span>📊</span> 本次段考表現、排名與強弱項
-                    </h3>
+                <div class="flex flex-col gap-2 pt-1">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-bold text-emerald-900 text-sm sm:text-base flex items-center gap-1.5">
+                            <span>📊</span> 成績表現與中位數比較
+                        </h3>
+                    </div>
                     <div>
-                        <label class="text-sm font-bold text-amber-900 mr-2">選擇考次：</label>
-                        <select id="exam-select" onchange="updateAnalysis()" class="border-2 border-amber-200 rounded-xl px-3 py-1.5 bg-white text-sm font-medium focus:ring-2 focus:ring-emerald-400 outline-none"></select>
+                        <label class="text-xs font-bold text-amber-900 mr-2">選擇考次：</label>
+                        <select id="exam-select" onchange="updateAnalysis()" class="border-2 border-amber-200 rounded-xl px-2.5 py-1 bg-white text-xs sm:text-sm font-medium focus:ring-2 focus:ring-emerald-400 outline-none"></select>
                     </div>
                 </div>
-                <div id="analysis-content" class="text-gray-700 space-y-2 text-sm sm:text-base"></div>
+                <div id="analysis-content" class="text-gray-700 space-y-2 text-xs sm:text-sm bg-white/70 p-3 rounded-xl border border-amber-100"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-5 border-2 border-amber-100 rounded-2xl shadow-sm">
-                    <h3 class="font-bold text-amber-900 mb-4 text-center font-fun text-lg">📈 歷次段考成績變化趨勢</h3>
+            <!-- 圖表一：歷次趨勢 -->
+            <div class="bg-white p-4 border-2 border-amber-100 rounded-2xl shadow-sm">
+                <h3 class="font-bold text-amber-900 mb-3 text-center font-fun text-sm sm:text-base">📈 歷次段考成績變化趨勢</h3>
+                <div class="w-full overflow-x-auto">
                     <canvas id="trendChart"></canvas>
                 </div>
-                <div class="bg-white p-5 border-2 border-amber-100 rounded-2xl shadow-sm">
-                    <h3 class="font-bold text-amber-900 mb-4 text-center font-fun text-lg">📊 各科與班級平均差距 (分)</h3>
+            </div>
+
+            <!-- 圖表二：與中位數差距 -->
+            <div class="bg-white p-4 border-2 border-amber-100 rounded-2xl shadow-sm">
+                <h3 class="font-bold text-amber-900 mb-3 text-center font-fun text-sm sm:text-base">📊 各科與班級「中位數」差距 (分)</h3>
+                <div class="w-full overflow-x-auto">
                     <canvas id="diffChart"></canvas>
                 </div>
             </div>
@@ -113,7 +108,7 @@
     </div>
 
     <script>
-        // 1. 直接將名單內建在前端，網頁一開秒開選單！
+        // 僅保留座號與姓名在前端，讓下拉選單秒開，完全不包含密碼
         const studentList = [
             { id: "01", name: "01李岱臻" }, { id: "02", name: "02林永喜" },
             { id: "03", name: "03林品妍" }, { id: "04", name: "04林品璇" },
@@ -137,7 +132,7 @@
         let trendChartInstance = null;
         let diffChartInstance = null;
 
-        // 頁面一載入就瞬間填入下拉選單（不需要等網路撈密碼表）
+        // 頁面一載入瞬間填入選單
         window.onload = function() {
             let select = document.getElementById('user-select');
             studentList.forEach(student => {
@@ -148,58 +143,65 @@
             });
         };
 
-        // 點擊登入時，才去背景抓取成績與密碼進行驗證
+        // 登入驗證（點擊後向 Google 試算表後端發請求比對密碼）
         async function handleLogin() {
-    let selectedAccount = document.getElementById('user-select').value;
-    let passwordInput = document.getElementById('password-input').value.trim();
+            let selectedAccount = document.getElementById('user-select').value;
+            let passwordInput = document.getElementById('password-input').value.trim();
 
-    if (!selectedAccount) {
-        alert("請先選擇您的帳號！");
-        return;
-    }
-    if (!passwordInput) {
-        alert("請輸入密碼！");
-        return;
-    }
+            if (!selectedAccount) {
+                alert("請先選擇您的帳號！");
+                return;
+            }
+            if (!passwordInput) {
+                alert("請輸入密碼！");
+                return;
+            }
 
-    try {
-        if (!globalData) {
-            let res = await fetch(API_URL);
-            globalData = await res.json();
-        }
+            let loginBtn = document.querySelector("#login-box button");
+            let originalText = loginBtn.innerHTML;
+            loginBtn.innerHTML = "<span>⏳</span> 驗證中...";
+            loginBtn.disabled = true;
 
-        let accounts = globalData.accounts;
-        let isValid = false;
-        let studentName = "";
+            try {
+                if (!globalData) {
+                    let res = await fetch(API_URL);
+                    globalData = await res.json();
+                }
 
-        // 從第 1 列開始讀取（跳過標題）
-        // 假設 A欄 (accounts[i][0]) 是 "01李岱臻"，B欄 (accounts[i][1]) 是密碼
-        for (let i = 1; i < accounts.length; i++) {
-            let dbAccountFull = String(accounts[i][0]).trim(); // 例如 "01李岱臻"
-            let dbPassword = String(accounts[i][1]).trim();     // 密碼
+                // 從 Google 試算表的 accounts (密碼表) 比對
+                let accounts = globalData.accounts;
+                let isValid = false;
+                let studentName = "";
 
-            // 檢查 A 欄開頭是否包含選取的座號（例如 "01"）
-            if (dbAccountFull.startsWith(selectedAccount) && dbPassword === passwordInput) {
-                isValid = true;
-                studentName = dbAccountFull;
-                break;
+                for (let i = 1; i < accounts.length; i++) {
+                    let dbAccountFull = String(accounts[i][0]).trim(); // A欄：例如 "67邱詠仲"
+                    let dbPassword = String(accounts[i][1]).trim();     // B欄：密碼
+
+                    if (dbAccountFull.startsWith(selectedAccount) && dbPassword === passwordInput) {
+                        isValid = true;
+                        studentName = dbAccountFull;
+                        break;
+                    }
+                }
+
+                if (isValid) {
+                    currentUser = { account: selectedAccount, name: studentName };
+                    document.getElementById('login-box').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
+                    document.getElementById('welcome-msg').textContent = `歡迎，${studentName}！`;
+                    initDashboard();
+                } else {
+                    alert("密碼錯誤，請重新輸入！");
+                    loginBtn.innerHTML = originalText;
+                    loginBtn.disabled = false;
+                }
+            } catch (err) {
+                alert("連線至資料庫失敗，請檢查網路！");
+                console.error(err);
+                loginBtn.innerHTML = originalText;
+                loginBtn.disabled = false;
             }
         }
-
-        if (isValid) {
-            currentUser = { account: selectedAccount, name: studentName };
-            document.getElementById('login-box').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('hidden');
-            document.getElementById('welcome-msg').textContent = `歡迎回來，${studentName} 同學！`;
-            initDashboard();
-        } else {
-            alert("密碼錯誤，請重新輸入！");
-        }
-    } catch (err) {
-        alert("連線至資料庫失敗！");
-        console.error(err);
-    }
-}
 
         function initDashboard() {
             let examSelect = document.getElementById('exam-select');
@@ -217,6 +219,17 @@
 
             renderTrendChart();
             updateAnalysis();
+        }
+
+        function getMedian(arr) {
+            let nums = arr.filter(n => !isNaN(n) && n !== null).sort((a, b) => a - b);
+            if (nums.length === 0) return 0;
+            let mid = Math.floor(nums.length / 2);
+            if (nums.length % 2 === 0) {
+                return (nums[mid - 1] + nums[mid]) / 2;
+            } else {
+                return nums[mid];
+            }
         }
 
         function calculateClassRankings(rows, header) {
@@ -318,13 +331,11 @@
             }
 
             let rankInfo = calculateClassRankings(rows, header);
-
             let subjects = ["國文", "英語", "數學", "社會", "自然"];
             let scores = {};
             let prValues = {};
             let totalScore = 0;
-            let validRowsCount = rows.length - 1;
-            let classAverages = {};
+            let classMedians = {};
 
             subjects.forEach(sub => {
                 let subIdx = idxMap[sub];
@@ -334,34 +345,34 @@
                 prValues[sub] = prIdx !== undefined ? (Number(studentRow[prIdx]) || "-") : "-";
                 totalScore += scores[sub];
 
-                let subTotal = 0;
+                let subScoresArr = [];
                 for (let i = 1; i < rows.length; i++) {
-                    subTotal += Number(rows[i][subIdx]) || 0;
+                    let sVal = Number(rows[i][subIdx]);
+                    if (!isNaN(sVal)) subScoresArr.push(sVal);
                 }
-                classAverages[sub] = subTotal / validRowsCount;
+                classMedians[sub] = getMedian(subScoresArr);
             });
 
             let studentAvg = (totalScore / subjects.length).toFixed(1);
 
             let diffs = {};
             subjects.forEach(sub => {
-                diffs[sub] = Number((scores[sub] - classAverages[sub]).toFixed(1));
+                diffs[sub] = Number((scores[sub] - classMedians[sub]).toFixed(1));
             });
 
             let sortedSubjects = [...subjects].sort((a, b) => diffs[b] - diffs[a]);
             let strongest = sortedSubjects[0];
             let weakest = sortedSubjects[sortedSubjects.length - 1];
 
-            let html = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2 bg-white/60 p-3 rounded-xl border border-amber-200">`;
+            let html = `<div class="space-y-1">`;
             html += `<p class="font-semibold text-gray-800">📌 個人總分平均：<span class="text-blue-600 font-bold">${studentAvg} 分</span></p>`;
             html += `<p class="font-semibold text-gray-800">🏆 班級總分排名：<span class="text-emerald-600 font-bold">第 ${rankInfo.rank} 名</span> / 共 ${rankInfo.totalStudents} 人</p>`;
-            html += `</div>`;
-
-            html += `<p>🌟 <b>強項科目：</b> <span class="text-emerald-600 font-bold">${strongest}</span> (${scores[strongest]}分，PR ${prValues[strongest]}，高於平均 <span class="text-emerald-600 font-bold">${diffs[strongest] >= 0 ? '+' + diffs[strongest] : diffs[strongest]} 分</span>)</p>`;
-            html += `<p>🌱 <b>需要灌溉的科目：</b> <span class="text-amber-700 font-bold">${weakest}</span> (${scores[weakest]}分，PR ${prValues[weakest]}，相對於平均 <span class="text-amber-700 font-bold">${diffs[weakest] >= 0 ? '+' + diffs[weakest] : diffs[weakest]} 分</span>)</p>`;
+            html += `<p class="pt-1">🌟 <b>強項科目：</b> <span class="text-emerald-600 font-bold">${strongest}</span> (${scores[strongest]}分，高於中位數 <span class="text-emerald-600 font-bold">${diffs[strongest] >= 0 ? '+' + diffs[strongest] : diffs[strongest]} 分</span>)</p>`;
+            html += `<p>🌱 <b>需加強科目：</b> <span class="text-amber-700 font-bold">${weakest}</span> (${scores[weakest]}分，相對於中位數 <span class="text-amber-700 font-bold">${diffs[weakest] >= 0 ? '+' + diffs[weakest] : diffs[weakest]} 分</span>)</p>`;
             
-            let details = subjects.map(sub => `${sub}: ${scores[sub]}分(PR${prValues[sub]}, ${diffs[sub] >= 0 ? '+' + diffs[sub] : diffs[sub]}分)`).join(" | ");
-            html += `<p class="text-xs text-gray-500 mt-2 border-t pt-2">各科詳細：${details}</p>`;
+            let details = subjects.map(sub => `${sub}: ${scores[sub]}分(中位數差${diffs[sub] >= 0 ? '+' + diffs[sub] : diffs[sub]})`).join("<br>");
+            html += `<div class="text-xs text-gray-500 mt-2 border-t pt-2 space-y-0.5"><span class="font-bold">各科與中位數比較：</span><br>${details}</div>`;
+            html += `</div>`;
 
             document.getElementById('analysis-content').innerHTML = html;
 
@@ -375,13 +386,16 @@
                 data: {
                     labels: subjects,
                     datasets: [{
-                        label: '相對於班級平均差距 (分)',
+                        label: '相對於班級中位數差距 (分)',
                         data: diffValues,
                         backgroundColor: bgColors,
                         borderWidth: 1
                     }]
                 },
-                options: { responsive: true, scales: { y: { grid: { color: '#f3f4f6' } } } }
+                options: { 
+                    responsive: true, 
+                    scales: { y: { grid: { color: '#f3f4f6' } } } 
+                }
             });
         }
     </script>
