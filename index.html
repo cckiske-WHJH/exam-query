@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文化國中704段考成績多維度分析系統</title>
+    <title>文化國中704成績多維度分析系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
@@ -30,11 +30,11 @@
             <div class="flex justify-center items-center gap-2 mb-1">
                 <span class="text-3xl animate-bounce-slow">🌿</span>
                 <h1 class="text-xl sm:text-3xl font-extrabold text-amber-900 font-fun tracking-wide">
-                    班級段考成績查詢
+                    文化國中704段考成績查詢
                 </h1>
                 <span class="text-3xl animate-bounce-slow" style="animation-delay: 1s;">🌸</span>
             </div>
-            <p class="text-gray-600 text-xs sm:text-sm">我們一同看成績，快樂成長！</p>
+            <p class="text-gray-600 text-xs sm:text-sm">關心成績，快樂成長！</p>
         </div>
 
         <!-- 登入表單 -->
@@ -89,9 +89,27 @@
                 <div id="analysis-content" class="text-gray-700 space-y-2 text-xs sm:text-sm bg-white/70 p-3 rounded-xl border border-amber-100"></div>
             </div>
 
-            <!-- 圖表一：歷次趨勢 -->
-            <div class="bg-white p-4 border-2 border-amber-100 rounded-2xl shadow-sm">
-                <h3 class="font-bold text-amber-900 mb-3 text-center font-fun text-sm sm:text-base">📈 歷次段考成績變化趨勢</h3>
+            <!-- 圖表一：歷次趨勢 (具備科目勾選功能) -->
+            <div class="bg-white p-4 border-2 border-amber-100 rounded-2xl shadow-sm space-y-3">
+                <h3 class="font-bold text-amber-900 text-center font-fun text-sm sm:text-base">📈 歷次段考成績變化趨勢</h3>
+                <!-- 科目勾選列 -->
+                <div class="flex flex-wrap justify-center gap-3 text-xs sm:text-sm bg-amber-50/50 p-2 rounded-xl border border-amber-200">
+                    <label class="inline-flex items-center gap-1 cursor-pointer font-medium text-rose-600">
+                        <input type="checkbox" value="國文" checked onchange="renderTrendChart()" class="rounded text-rose-500 focus:ring-rose-400"> 國文
+                    </label>
+                    <label class="inline-flex items-center gap-1 cursor-pointer font-medium text-blue-600">
+                        <input type="checkbox" value="英語" checked onchange="renderTrendChart()" class="rounded text-blue-500 focus:ring-blue-400"> 英語
+                    </label>
+                    <label class="inline-flex items-center gap-1 cursor-pointer font-medium text-emerald-600">
+                        <input type="checkbox" value="數學" checked onchange="renderTrendChart()" class="rounded text-emerald-500 focus:ring-emerald-400"> 數學
+                    </label>
+                    <label class="inline-flex items-center gap-1 cursor-pointer font-medium text-amber-600">
+                        <input type="checkbox" value="社會" checked onchange="renderTrendChart()" class="rounded text-amber-500 focus:ring-amber-400"> 社會
+                    </label>
+                    <label class="inline-flex items-center gap-1 cursor-pointer font-medium text-purple-600">
+                        <input type="checkbox" value="自然" checked onchange="renderTrendChart()" class="rounded text-purple-500 focus:ring-purple-400"> 自然
+                    </label>
+                </div>
                 <div class="w-full overflow-x-auto">
                     <canvas id="trendChart"></canvas>
                 </div>
@@ -201,7 +219,7 @@
                     loginBtn.disabled = false;
                 }
             } catch (err) {
-                alert("您等到花兒也謝了～ 那就開啟網路撥接！");
+                alert("您等到花兒也謝了～ 請開啟網路撥接！");
                 console.error(err);
                 loginBtn.innerHTML = originalText;
                 loginBtn.disabled = false;
@@ -268,11 +286,20 @@
         }
 
         function renderTrendChart() {
+            if (!globalData || !currentUser) return;
+
+            // 取得所有被勾選的科目
+            let checkboxes = document.querySelectorAll('.space-y-3 input[type="checkbox"]');
+            let selectedSubjects = [];
+            checkboxes.forEach(cb => {
+                if (cb.checked) selectedSubjects.push(cb.value);
+            });
+
             let exams = Object.keys(globalData.scores).filter(e => globalData.scores[e].length > 1);
-            let subjects = ["國文", "英語", "數學", "社會", "自然"];
             let studentName = currentUser.name;
 
-            let subjectData = { "國文": [], "英語": [], "數學": [], "社會": [], "自然": [] };
+            let subjectData = {};
+            selectedSubjects.forEach(sub => { subjectData[sub] = []; });
 
             exams.forEach(exam => {
                 let rows = globalData.scores[exam];
@@ -280,27 +307,36 @@
                 let idxMap = {};
                 header.forEach((h, idx) => { idxMap[h.toString().trim()] = idx; });
 
-                let found = false;
+                let studentRow = null;
                 for (let i = 1; i < rows.length; i++) {
                     if (rows[i][0].toString().includes(studentName)) {
-                        subjects.forEach(sub => {
-                            subjectData[sub].push(Number(rows[i][idxMap[sub]]) || 0);
-                        });
-                        found = true;
+                        studentRow = rows[i];
                         break;
                     }
                 }
-                if (!found) {
-                    subjects.forEach(sub => subjectData[sub].push(null));
-                }
+
+                selectedSubjects.forEach(sub => {
+                    if (studentRow && idxMap[sub] !== undefined) {
+                        subjectData[sub].push(Number(studentRow[idxMap[sub]]) || 0);
+                    } else {
+                        subjectData[sub].push(null);
+                    }
+                });
             });
 
-            let colors = ['#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
-            let datasets = subjects.map((sub, idx) => ({
+            let colorMap = {
+                '國文': '#f43f5e',
+                '英語': '#3b82f6',
+                '數學': '#10b981',
+                '社會': '#f59e0b',
+                '自然': '#8b5cf6'
+            };
+
+            let datasets = selectedSubjects.map(sub => ({
                 label: sub,
                 data: subjectData[sub],
-                borderColor: colors[idx],
-                backgroundColor: colors[idx],
+                borderColor: colorMap[sub],
+                backgroundColor: colorMap[sub],
                 tension: 0.2,
                 fill: false
             }));
@@ -310,7 +346,10 @@
             trendChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: { labels: exams, datasets: datasets },
-                options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
+                options: { 
+                    responsive: true, 
+                    scales: { y: { beginAtZero: true, max: 100 } } 
+                }
             });
         }
 
