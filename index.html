@@ -3,45 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>學生段考成績查詢與多維度分析系統</title>
+    <title>皮克敏段考成績查詢與多維度分析系統</title>
     <!-- Tailwind CSS 樣式庫 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js 圖表庫 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 引入 Google Fonts (可愛字體與手寫風格) -->
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        .font-fun {
+            font-family: 'ZCOOL KuaiLe', 'Noto Sans TC', sans-serif;
+        }
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+        /* 皮克敏風格的跳動與浮動動畫 */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(2deg); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .animate-bounce-slow {
+            animation: bounce-slow 2s ease-in-out infinite;
+        }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen p-4 sm:p-8">
-    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden p-6 sm:p-8">
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-center text-blue-600 mb-6">段考成績查詢與個人表現分析</h1>
+<body class="bg-amber-50/60 min-h-screen p-4 sm:p-8 relative overflow-x-hidden">
+
+    <!-- 背景裝飾：可愛葉子與花朵小標籤 -->
+    <div class="absolute top-4 left-6 hidden md:flex items-center gap-2 bg-emerald-100 px-4 py-2 rounded-full border border-emerald-300 shadow-sm animate-float">
+        <span class="text-xl">🌱</span>
+        <span class="font-bold text-emerald-800 text-sm">皮克敏陪你一起看成績！</span>
+    </div>
+    <div class="absolute top-4 right-6 hidden md:flex items-center gap-2 bg-rose-100 px-4 py-2 rounded-full border border-rose-300 shadow-sm animate-float" style="animation-delay: 1.5s;">
+        <span class="text-xl">🌸</span>
+        <span class="font-bold text-rose-800 text-sm">深呼吸，快樂成長最重要～</span>
+    </div>
+
+    <div class="max-w-4xl mx-auto bg-white/90 backdrop-blur-md rounded-3xl shadow-xl overflow-hidden p-6 sm:p-10 border-4 border-amber-200 relative my-4">
+        
+        <!-- 頂部標題區結合皮克敏元素 -->
+        <div class="text-center mb-6">
+            <div class="flex justify-center items-center gap-3 mb-2">
+                <span class="text-4xl animate-bounce-slow">🌿</span>
+                <h1 class="text-2xl sm:text-4xl font-extrabold text-amber-900 font-fun tracking-wide">
+                    班級段考成績查詢與成長分析
+                </h1>
+                <span class="text-4xl animate-bounce-slow" style="animation-delay: 1s;">🌸</span>
+            </div>
+            <p class="text-gray-600 text-sm sm:text-base">輕鬆掌握學習狀況，給孩子大大的鼓勵與支持！</p>
+        </div>
 
         <!-- 登入表單 -->
-        <div id="login-box" class="space-y-5 max-w-md mx-auto bg-gray-50 p-6 rounded-xl border">
+        <div id="login-box" class="space-y-5 max-w-md mx-auto bg-gradient-to-b from-amber-50/80 to-emerald-50/50 p-6 sm:p-8 rounded-2xl border-2 border-amber-300 shadow-inner relative">
+            
+            <!-- 裝飾小插圖 (模擬皮克敏漫畫對話框) -->
+            <div class="absolute -top-6 -left-6 bg-white border-2 border-emerald-400 px-3 py-1.5 rounded-2xl shadow-md transform -rotate-6 text-xs font-bold text-emerald-700 flex items-center gap-1">
+                <span>🍃 嗨！今天心情好嗎？</span>
+            </div>
+
             <div>
-                <label class="block text-gray-700 font-semibold mb-2">選擇您的帳號（座號與姓名）：</label>
-                <select id="user-select" class="w-full border rounded-lg p-3 bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                <label class="block text-amber-900 font-bold mb-2 flex items-center gap-2">
+                    <span>🌱</span> 選擇您的帳號（座號與姓名）：
+                </label>
+                <select id="user-select" class="w-full border-2 border-amber-200 rounded-xl p-3 bg-white focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition font-medium">
                     <option value="">-- 請選擇您的身分 --</option>
                 </select>
             </div>
             <div>
-                <label class="block text-gray-700 font-semibold mb-2">請輸入密碼（身分證後5碼）：</label>
-                <input type="password" id="password-input" class="w-full border rounded-lg p-3 bg-white focus:ring-2 focus:ring-blue-500 outline-none" placeholder="例如：12345">
+                <label class="block text-amber-900 font-bold mb-2 flex items-center gap-2">
+                    <span>🌸</span> 請輸入密碼（身分證後5碼）：
+                </label>
+                <input type="password" id="password-input" class="w-full border-2 border-amber-200 rounded-xl p-3 bg-white focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition" placeholder="例如：12345">
             </div>
-            <button onclick="handleLogin()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow">登入查詢</button>
+            <button onclick="handleLogin()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3.5 rounded-xl transition shadow-md transform hover:-translate-y-0.5 text-lg font-fun tracking-wider flex items-center justify-center gap-2">
+                <span>🚀</span> 進入成績樂園
+            </button>
         </div>
 
         <!-- 查詢後的儀表板 -->
         <div id="dashboard" class="hidden space-y-8 mt-4">
-            <div class="flex justify-between items-center border-b pb-4">
-                <h2 id="welcome-msg" class="text-xl font-bold text-gray-800"></h2>
-                <button onclick="location.reload()" class="bg-rose-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-rose-600 transition">登出</button>
+            <div class="flex justify-between items-center border-b-2 border-amber-100 pb-4">
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl">🌻</span>
+                    <h2 id="welcome-msg" class="text-xl sm:text-2xl font-bold text-amber-900 font-fun"></h2>
+                </div>
+                <button onclick="location.reload()" class="bg-rose-400 hover:bg-rose-500 text-white px-4 py-2 rounded-xl text-sm font-bold transition shadow-sm flex items-center gap-1">
+                    <span>🚪</span> 登出
+                </button>
             </div>
 
-            <!-- 強弱項分析卡片 -->
-            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-600 p-5 rounded-r-xl shadow-sm">
+            <!-- 強弱項與排名分析卡片 -->
+            <div class="bg-gradient-to-r from-amber-50/80 via-emerald-50/60 to-sky-50/80 border-2 border-emerald-300 p-5 sm:p-6 rounded-2xl shadow-sm relative">
+                <div class="absolute -top-3 right-4 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+                    ✨ 皮克敏分析報告
+                </div>
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
-                    <h3 class="font-bold text-blue-900 text-lg">📊 段考表現與強弱項分析</h3>
+                    <h3 class="font-bold text-emerald-900 text-lg flex items-center gap-2">
+                        <span>📊</span> 本次段考表現、排名與強弱項
+                    </h3>
                     <div>
-                        <label class="text-sm font-medium text-gray-700 mr-2">選擇考次：</label>
-                        <select id="exam-select" onchange="updateAnalysis()" class="border rounded-lg px-3 py-1.5 bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"></select>
+                        <label class="text-sm font-bold text-amber-900 mr-2">選擇考次：</label>
+                        <select id="exam-select" onchange="updateAnalysis()" class="border-2 border-amber-200 rounded-xl px-3 py-1.5 bg-white text-sm font-medium focus:ring-2 focus:ring-emerald-400 outline-none"></select>
                     </div>
                 </div>
                 <div id="analysis-content" class="text-gray-700 space-y-2 text-sm sm:text-base"></div>
@@ -50,22 +119,27 @@
             <!-- 圖表區域 -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- 歷次成績趨勢折線圖 -->
-                <div class="bg-white p-5 border rounded-xl shadow-sm">
-                    <h3 class="font-bold text-gray-700 mb-4 text-center">歷次段考成績變化趨勢</h3>
+                <div class="bg-white p-5 border-2 border-amber-100 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-amber-900 mb-4 text-center font-fun text-lg">📈 歷次段考成績變化趨勢</h3>
                     <canvas id="trendChart"></canvas>
                 </div>
                 <!-- 各科與班級平均差距長條圖 -->
-                <div class="bg-white p-5 border rounded-xl shadow-sm">
-                    <h3 class="font-bold text-gray-700 mb-4 text-center">各科與班級平均差距 (分)</h3>
+                <div class="bg-white p-5 border-2 border-amber-100 rounded-2xl shadow-sm">
+                    <h3 class="font-bold text-amber-900 mb-4 text-center font-fun text-lg">📊 各科與班級平均差距 (分)</h3>
                     <canvas id="diffChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- 底部溫馨小語 -->
+    <div class="text-center text-gray-500 text-xs mt-6">
+        🌿 每個孩子都是獨一無二的種子，在愛與陪伴中慢慢開花結果 🌸
+    </div>
+
     <script>
         // 替換下方為您的 Google Apps Script 網頁應用程式網址
-        const API_URL = "https://script.google.com/macros/s/AKfycbyN5FlODeMVI8KmcMeye5KOrOWDVAP_CIty4-UObMUxEvU1JDRx-sANEhLO_rdq2Fd_aw/exec";
+        const API_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
 
         let globalData = null;
         let currentUser = null;
@@ -114,7 +188,6 @@
             let studentName = "";
 
             for (let i = 1; i < accounts.length; i++) {
-                // 確保比對時將密碼轉為字串避免型態不符
                 if (String(accounts[i][1]) === String(selectedAccount) && String(accounts[i][2]) === passwordInput) {
                     isValid = true;
                     studentName = accounts[i][0];
@@ -138,7 +211,6 @@
             let examSelect = document.getElementById('exam-select');
             examSelect.innerHTML = "";
             
-            // 篩選出有資料的考次分頁
             Object.keys(globalData.scores).forEach(examName => {
                 let rows = globalData.scores[examName];
                 if (rows && rows.length > 1) {
@@ -151,6 +223,38 @@
 
             renderTrendChart();
             updateAnalysis();
+        }
+
+        // 計算該次考試所有學生的總分，並依高低排序計算「總分排名」
+        function calculateClassRankings(rows, header) {
+            let subjects = ["國文", "英語", "數學", "社會", "自然"];
+            let idxMap = {};
+            header.forEach((h, idx) => { idxMap[h.toString().trim()] = idx; });
+
+            let studentTotals = [];
+            for (let i = 1; i < rows.length; i++) {
+                let name = rows[i][0];
+                if (!name) continue;
+                let sum = 0;
+                subjects.forEach(sub => {
+                    sum += Number(rows[i][idxMap[sub]]) || 0;
+                });
+                studentTotals.push({ name: name, total: sum });
+            }
+
+            // 依總分由高到低排序
+            studentTotals.sort((a, b) => b.total - a.total);
+
+            // 找出當前學生的排名 (同分同名次處理)
+            let myRank = "-";
+            let totalStudents = studentTotals.length;
+            for (let i = 0; i < studentTotals.length; i++) {
+                if (studentTotals[i].name === currentUser.name) {
+                    myRank = i + 1;
+                    break;
+                }
+            }
+            return { rank: myRank, totalStudents: totalStudents };
         }
 
         // 渲染歷次成績趨勢折線圖
@@ -182,7 +286,7 @@
                 }
             });
 
-            let colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
+            let colors = ['#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
             let datasets = subjects.map((sub, idx) => ({
                 label: sub,
                 data: subjectData[sub],
@@ -204,7 +308,7 @@
             });
         }
 
-        // 更新單次考試分析與差距長條圖
+        // 更新單次考試分析與排名、差距長條圖
         function updateAnalysis() {
             let selectedExam = document.getElementById('exam-select').value;
             if (!selectedExam) return;
@@ -227,6 +331,9 @@
                 return;
             }
 
+            // 計算排名
+            let rankInfo = calculateClassRankings(rows, header);
+
             let subjects = ["國文", "英語", "數學", "社會", "自然"];
             let scores = {};
             let prValues = {};
@@ -242,7 +349,6 @@
                 prValues[sub] = prIdx !== undefined ? (Number(studentRow[prIdx]) || "-") : "-";
                 totalScore += scores[sub];
 
-                // 計算該科班級平均
                 let subTotal = 0;
                 for (let i = 1; i < rows.length; i++) {
                     subTotal += Number(rows[i][subIdx]) || 0;
@@ -252,29 +358,30 @@
 
             let studentAvg = (totalScore / subjects.length).toFixed(1);
 
-            // 計算與平均差距
             let diffs = {};
             subjects.forEach(sub => {
                 diffs[sub] = Number((scores[sub] - classAverages[sub]).toFixed(1));
             });
 
-            // 排序找出強弱項
             let sortedSubjects = [...subjects].sort((a, b) => diffs[b] - diffs[a]);
             let strongest = sortedSubjects[0];
             let weakest = sortedSubjects[sortedSubjects.length - 1];
 
-            let html = `<p class="font-semibold text-gray-800">個人平均分數：<span class="text-blue-600">${studentAvg} 分</span></p>`;
+            let html = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2 bg-white/60 p-3 rounded-xl border border-amber-200">`;
+            html += `<p class="font-semibold text-gray-800">📌 個人總分平均：<span class="text-blue-600 font-bold">${studentAvg} 分</span></p>`;
+            html += `<p class="font-semibold text-gray-800">🏆 班級總分排名：<span class="text-emerald-600 font-bold">第 ${rankInfo.rank} 名</span> / 共 ${rankInfo.totalStudents} 人</p>`;
+            html += `</div>`;
+
             html += `<p>🌟 <b>強項科目：</b> <span class="text-emerald-600 font-bold">${strongest}</span> (${scores[strongest]}分，PR ${prValues[strongest]}，高於平均 <span class="text-emerald-600 font-bold">${diffs[strongest] >= 0 ? '+' + diffs[strongest] : diffs[strongest]} 分</span>)</p>`;
-            html += `<p>⚠️ <b>弱項科目：</b> <span class="text-rose-600 font-bold">${weakest}</span> (${scores[weakest]}分，PR ${prValues[weakest]}，相對於平均 <span class="text-rose-600 font-bold">${diffs[weakest] >= 0 ? '+' + diffs[weakest] : diffs[weakest]} 分</span>)</p>`;
+            html += `<p>🌱 <b>需要灌溉的科目：</b> <span class="text-amber-700 font-bold">${weakest}</span> (${scores[weakest]}分，PR ${prValues[weakest]}，相對於平均 <span class="text-amber-700 font-bold">${diffs[weakest] >= 0 ? '+' + diffs[weakest] : diffs[weakest]} 分</span>)</p>`;
             
             let details = subjects.map(sub => `${sub}: ${scores[sub]}分(PR${prValues[sub]}, ${diffs[sub] >= 0 ? '+' + diffs[sub] : diffs[sub]}分)`).join(" | ");
             html += `<p class="text-xs text-gray-500 mt-2 border-t pt-2">各科詳細：${details}</p>`;
 
             document.getElementById('analysis-content').innerHTML = html;
 
-            // 渲染差距長條圖
             let diffValues = subjects.map(sub => diffs[sub]);
-            let bgColors = diffValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(244, 63, 94, 0.7)');
+            let bgColors = diffValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(245, 158, 11, 0.7)');
 
             let ctx = document.getElementById('diffChart').getContext('2d');
             if (diffChartInstance) diffChartInstance.destroy();
