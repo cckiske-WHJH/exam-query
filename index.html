@@ -3,43 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文化國中704段考成績查詢與多維度分析系統</title>
-    <!-- Tailwind CSS 樣式庫 -->
+    <title>皮克敏段考成績查詢與多維度分析系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js 圖表庫 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- 引入 Google Fonts (可愛字體與手寫風格) -->
     <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        .font-fun {
-            font-family: 'ZCOOL KuaiLe', 'Noto Sans TC', sans-serif;
-        }
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-        }
-        /* 皮克敏風格的跳動與浮動動畫 */
+        .font-fun { font-family: 'ZCOOL KuaiLe', 'Noto Sans TC', sans-serif; }
+        body { font-family: 'Noto Sans TC', sans-serif; }
         @keyframes float {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
             50% { transform: translateY(-8px) rotate(2deg); }
         }
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
-        }
+        .animate-float { animation: float 3s ease-in-out infinite; }
         @keyframes bounce-slow {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-5px); }
         }
-        .animate-bounce-slow {
-            animation: bounce-slow 2s ease-in-out infinite;
-        }
+        .animate-bounce-slow { animation: bounce-slow 2s ease-in-out infinite; }
     </style>
 </head>
 <body class="bg-amber-50/60 min-h-screen p-4 sm:p-8 relative overflow-x-hidden">
 
-    <!-- 背景裝飾：可愛葉子與花朵小標籤 -->
     <div class="absolute top-4 left-6 hidden md:flex items-center gap-2 bg-emerald-100 px-4 py-2 rounded-full border border-emerald-300 shadow-sm animate-float">
         <span class="text-xl">🌱</span>
-        <span class="font-bold text-emerald-800 text-sm">一同關心孩子的學習成果</span>
+        <span class="font-bold text-emerald-800 text-sm">一同關心學習進程！</span>
     </div>
     <div class="absolute top-4 right-6 hidden md:flex items-center gap-2 bg-rose-100 px-4 py-2 rounded-full border border-rose-300 shadow-sm animate-float" style="animation-delay: 1.5s;">
         <span class="text-xl">🌸</span>
@@ -48,7 +35,6 @@
 
     <div class="max-w-4xl mx-auto bg-white/90 backdrop-blur-md rounded-3xl shadow-xl overflow-hidden p-6 sm:p-10 border-4 border-amber-200 relative my-4">
         
-        <!-- 頂部標題區結合皮克敏元素 -->
         <div class="text-center mb-6">
             <div class="flex justify-center items-center gap-3 mb-2">
                 <span class="text-4xl animate-bounce-slow">🌿</span>
@@ -62,8 +48,6 @@
 
         <!-- 登入表單 -->
         <div id="login-box" class="space-y-5 max-w-md mx-auto bg-gradient-to-b from-amber-50/80 to-emerald-50/50 p-6 sm:p-8 rounded-2xl border-2 border-amber-300 shadow-inner relative">
-            
-            <!-- 裝飾小插圖 (模擬皮克敏漫畫對話框) -->
             <div class="absolute -top-6 -left-6 bg-white border-2 border-emerald-400 px-3 py-1.5 rounded-2xl shadow-md transform -rotate-6 text-xs font-bold text-emerald-700 flex items-center gap-1">
                 <span>🍃 嗨！今天心情好嗎？</span>
             </div>
@@ -83,7 +67,7 @@
                 <input type="password" id="password-input" class="w-full border-2 border-amber-200 rounded-xl p-3 bg-white focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition" placeholder="例如：12345">
             </div>
             <button onclick="handleLogin()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3.5 rounded-xl transition shadow-md transform hover:-translate-y-0.5 text-lg font-fun tracking-wider flex items-center justify-center gap-2">
-                <span>🚀</span> 🎓 學習成果專區
+                <span>🚀</span> 學習成果查詢
             </button>
         </div>
 
@@ -99,7 +83,6 @@
                 </button>
             </div>
 
-            <!-- 強弱項與排名分析卡片 -->
             <div class="bg-gradient-to-r from-amber-50/80 via-emerald-50/60 to-sky-50/80 border-2 border-emerald-300 p-5 sm:p-6 rounded-2xl shadow-sm relative">
                 <div class="absolute -top-3 right-4 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow">
                     ✨ AI 分析報告
@@ -116,14 +99,11 @@
                 <div id="analysis-content" class="text-gray-700 space-y-2 text-sm sm:text-base"></div>
             </div>
 
-            <!-- 圖表區域 -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- 歷次成績趨勢折線圖 -->
                 <div class="bg-white p-5 border-2 border-amber-100 rounded-2xl shadow-sm">
                     <h3 class="font-bold text-amber-900 mb-4 text-center font-fun text-lg">📈 歷次段考成績變化趨勢</h3>
                     <canvas id="trendChart"></canvas>
                 </div>
-                <!-- 各科與班級平均差距長條圖 -->
                 <div class="bg-white p-5 border-2 border-amber-100 rounded-2xl shadow-sm">
                     <h3 class="font-bold text-amber-900 mb-4 text-center font-fun text-lg">📊 各科與班級平均差距 (分)</h3>
                     <canvas id="diffChart"></canvas>
@@ -132,45 +112,44 @@
         </div>
     </div>
 
-    <!-- 底部溫馨小語 -->
-    <div class="text-center text-gray-500 text-xs mt-6">
-        🌿 每個孩子都是獨一無二的種子，在愛與陪伴中慢慢開花結果 🌸
-    </div>
-
     <script>
-        // 替換下方為您的 Google Apps Script 網頁應用程式網址
-        const API_URL = "https://script.google.com/macros/s/AKfycbyN5FlODeMVI8KmcMeye5KOrOWDVAP_CIty4-UObMUxEvU1JDRx-sANEhLO_rdq2Fd_aw/exec";
+        // 1. 直接將名單內建在前端，網頁一開秒開選單！
+        const studentList = [
+            { id: "01", name: "01李岱臻" }, { id: "02", name: "02林永喜" },
+            { id: "03", name: "03林品妍" }, { id: "04", name: "04林品璇" },
+            { id: "05", name: "05林妤晴" }, { id: "06", name: "06邱子芯" },
+            { id: "07", name: "07張采穎" }, { id: "08", name: "08張祐瑄" },
+            { id: "09", name: "09陳依槿" }, { id: "10", name: "10劉憶萱" },
+            { id: "11", name: "11賴沛金" }, { id: "12", name: "12賴苡安" },
+            { id: "13", name: "13謝苡柔" }, { id: "15", name: "15王辰祐" },
+            { id: "16", name: "16林弘鎰" }, { id: "17", name: "17林裕鈁" },
+            { id: "18", name: "18邱渤洲" }, { id: "19", name: "19紀  杰" },
+            { id: "20", name: "20張承煜" }, { id: "21", name: "21陳佑睿" },
+            { id: "22", name: "22陳利昌" }, { id: "23", name: "23游尚睿" },
+            { id: "24", name: "24楊佳恩" }, { id: "25", name: "25賴誠恩" },
+            { id: "26", name: "26鍾牧辰" }, { id: "67", name: "67邱詠仲" }
+        ];
+
+        const API_URL = "https://script.google.com/macros/s/AKfycbyN5FlODeMVI8KmcMeye5KOrOWDVAP_CIty4-UObMUxEvU1JDRx-sANEhLO_rdq2Fd_aw/exec"; // 請替換為您的 Apps Script 網址
 
         let globalData = null;
         let currentUser = null;
         let trendChartInstance = null;
         let diffChartInstance = null;
 
-        // 頁面載入時抓取 API 資料並填入下拉選單
-        window.onload = async function() {
-            try {
-                let res = await fetch(API_URL);
-                globalData = await res.json();
-                
-                let select = document.getElementById('user-select');
-                let accounts = globalData.accounts;
-                
-                // 從第 1 列開始（跳過標題列），第 0 欄是姓名，第 1 欄是帳號
-                for (let i = 1; i < accounts.length; i++) {
-                    if (accounts[i][0] && accounts[i][1]) {
-                        let opt = document.createElement('option');
-                        opt.value = accounts[i][1]; // 帳號作為 value
-                        opt.textContent = accounts[i][0]; // 姓名顯示在選單上
-                        select.appendChild(opt);
-                    }
-                }
-            } catch (err) {
-                alert("無法連線至資料庫，請檢查 API 設定是否正確！");
-                console.error(err);
-            }
+        // 頁面一載入就瞬間填入下拉選單（不需要等網路撈密碼表）
+        window.onload = function() {
+            let select = document.getElementById('user-select');
+            studentList.forEach(student => {
+                let opt = document.createElement('option');
+                opt.value = student.id;
+                opt.textContent = student.name;
+                select.appendChild(opt);
+            });
         };
 
-        function handleLogin() {
+        // 點擊登入時，才去背景抓取成績與密碼進行驗證
+        async function handleLogin() {
             let selectedAccount = document.getElementById('user-select').value;
             let passwordInput = document.getElementById('password-input').value.trim();
 
@@ -183,27 +162,49 @@
                 return;
             }
 
-            let accounts = globalData.accounts;
-            let isValid = false;
-            let studentName = "";
+            // 顯示載入中提示
+            let loginBtn = document.querySelector("#login-box button");
+            let originalText = loginBtn.innerHTML;
+            loginBtn.innerHTML = "<span>⏳</span> 驗證與載入成績中...";
+            loginBtn.disabled = true;
 
-            for (let i = 1; i < accounts.length; i++) {
-                if (String(accounts[i][1]) === String(selectedAccount) && String(accounts[i][2]) === passwordInput) {
-                    isValid = true;
-                    studentName = accounts[i][0];
-                    break;
+            try {
+                if (!globalData) {
+                    let res = await fetch(API_URL);
+                    globalData = await res.json();
                 }
-            }
 
-            if (isValid) {
-                currentUser = { account: selectedAccount, name: studentName };
-                document.getElementById('login-box').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-                document.getElementById('welcome-msg').textContent = `歡迎回來，${studentName} 同學！`;
-                
-                initDashboard();
-            } else {
-                alert("密碼錯誤，請重新輸入！");
+                // 從 Google 試算表的 accounts 資料中比對密碼
+                let accounts = globalData.accounts;
+                let isValid = false;
+                let studentName = "";
+
+                for (let i = 1; i < accounts.length; i++) {
+                    // 假設 accounts[i][1] 是帳號(座號)，accounts[i][2] 是密碼
+                    if (String(accounts[i][1]).padStart(2, '0') === String(selectedAccount).padStart(2, '0') && 
+                        String(accounts[i][2]).trim() === passwordInput) {
+                        isValid = true;
+                        studentName = accounts[i][0]; // 抓取試算表上的正式命名
+                        break;
+                    }
+                }
+
+                if (isValid) {
+                    currentUser = { account: selectedAccount, name: studentName };
+                    document.getElementById('login-box').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
+                    document.getElementById('welcome-msg').textContent = `歡迎回來，${studentName} 同學！`;
+                    initDashboard();
+                } else {
+                    alert("密碼錯誤，請重新輸入！");
+                    loginBtn.innerHTML = originalText;
+                    loginBtn.disabled = false;
+                }
+            } catch (err) {
+                alert("連線至資料庫失敗，請稍後再試！");
+                console.error(err);
+                loginBtn.innerHTML = originalText;
+                loginBtn.disabled = false;
             }
         }
 
@@ -225,7 +226,6 @@
             updateAnalysis();
         }
 
-        // 計算該次考試所有學生的總分，並依高低排序計算「總分排名」
         function calculateClassRankings(rows, header) {
             let subjects = ["國文", "英語", "數學", "社會", "自然"];
             let idxMap = {};
@@ -242,14 +242,12 @@
                 studentTotals.push({ name: name, total: sum });
             }
 
-            // 依總分由高到低排序
             studentTotals.sort((a, b) => b.total - a.total);
 
-            // 找出當前學生的排名 (同分同名次處理)
             let myRank = "-";
             let totalStudents = studentTotals.length;
             for (let i = 0; i < studentTotals.length; i++) {
-                if (studentTotals[i].name === currentUser.name) {
+                if (studentTotals[i].name.includes(currentUser.name) || currentUser.name.includes(studentTotals[i].name)) {
                     myRank = i + 1;
                     break;
                 }
@@ -257,7 +255,6 @@
             return { rank: myRank, totalStudents: totalStudents };
         }
 
-        // 渲染歷次成績趨勢折線圖
         function renderTrendChart() {
             let exams = Object.keys(globalData.scores).filter(e => globalData.scores[e].length > 1);
             let subjects = ["國文", "英語", "數學", "社會", "自然"];
@@ -273,7 +270,7 @@
 
                 let found = false;
                 for (let i = 1; i < rows.length; i++) {
-                    if (rows[i][0] === studentName) {
+                    if (rows[i][0].toString().includes(studentName)) {
                         subjects.forEach(sub => {
                             subjectData[sub].push(Number(rows[i][idxMap[sub]]) || 0);
                         });
@@ -301,14 +298,10 @@
             trendChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: { labels: exams, datasets: datasets },
-                options: { 
-                    responsive: true, 
-                    scales: { y: { beginAtZero: true, max: 100 } } 
-                }
+                options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
             });
         }
 
-        // 更新單次考試分析與排名、差距長條圖
         function updateAnalysis() {
             let selectedExam = document.getElementById('exam-select').value;
             if (!selectedExam) return;
@@ -320,7 +313,7 @@
 
             let studentRow = null;
             for (let i = 1; i < rows.length; i++) {
-                if (rows[i][0] === currentUser.name) {
+                if (rows[i][0].toString().includes(currentUser.name)) {
                     studentRow = rows[i];
                     break;
                 }
@@ -331,7 +324,6 @@
                 return;
             }
 
-            // 計算排名
             let rankInfo = calculateClassRankings(rows, header);
 
             let subjects = ["國文", "英語", "數學", "社會", "自然"];
@@ -396,10 +388,7 @@
                         borderWidth: 1
                     }]
                 },
-                options: {
-                    responsive: true,
-                    scales: { y: { grid: { color: '#f3f4f6' } } }
-                }
+                options: { responsive: true, scales: { y: { grid: { color: '#f3f4f6' } } } }
             });
         }
     </script>
