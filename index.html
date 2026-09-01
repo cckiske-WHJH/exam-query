@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文中704段考成績多維度分析系統</title>
+    <title>文化國中704段考成績多維度分析系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
@@ -30,11 +30,11 @@
             <div class="flex justify-center items-center gap-2 mb-1">
                 <span class="text-3xl animate-bounce-slow">🌿</span>
                 <h1 class="text-xl sm:text-3xl font-extrabold text-amber-900 font-fun tracking-wide">
-                    文化國中704段考成績查詢
+                    班級段考成績查詢
                 </h1>
                 <span class="text-3xl animate-bounce-slow" style="animation-delay: 1s;">🌸</span>
             </div>
-            <p class="text-gray-600 text-xs sm:text-sm">一同關心孩子的學習，快樂成長！</p>
+            <p class="text-gray-600 text-xs sm:text-sm">我們一同看成績，快樂成長！</p>
         </div>
 
         <!-- 登入表單 -->
@@ -44,17 +44,17 @@
                     <span>🌱</span> 選擇您的帳號：
                 </label>
                 <select id="user-select" class="w-full border-2 border-amber-200 rounded-xl p-2.5 bg-white focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition text-sm font-medium">
-                    <option value="">-- 考生座號姓名 --</option>
+                    <option value="">-- 座號+姓名 --</option>
                 </select>
             </div>
             <div>
                 <label class="block text-amber-900 font-bold mb-1.5 text-sm flex items-center gap-1.5">
-                    <span>🌸</span> 請輸入考生身分證末5碼數字：
+                    <span>🌸</span> 考生身分證末5碼數字：
                 </label>
                 <input type="password" id="password-input" class="w-full border-2 border-amber-200 rounded-xl p-2.5 bg-white focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 outline-none transition text-sm" placeholder="請輸入密碼">
             </div>
             <button onclick="handleLogin()" class="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-3 rounded-xl transition shadow-md text-base font-fun tracking-wider flex items-center justify-center gap-2">
-                <span>🚀</span> 檢視學習成果
+                <span>🚀</span> 檢視學習進程
             </button>
         </div>
 
@@ -97,7 +97,15 @@
                 </div>
             </div>
 
-            <!-- 圖表二：與中位數差距 -->
+            <!-- 圖表二：歷次班級排名趨勢 -->
+            <div class="bg-white p-4 border-2 border-amber-100 rounded-2xl shadow-sm">
+                <h3 class="font-bold text-amber-900 mb-3 text-center font-fun text-sm sm:text-base">🏆 歷次段考班級總排名趨勢</h3>
+                <div class="w-full overflow-x-auto">
+                    <canvas id="rankTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 圖表三：與中位數差距 -->
             <div class="bg-white p-4 border-2 border-amber-100 rounded-2xl shadow-sm">
                 <h3 class="font-bold text-amber-900 mb-3 text-center font-fun text-sm sm:text-base">📊 各科與班級「中位數」差距 (分)</h3>
                 <div class="w-full overflow-x-auto">
@@ -108,7 +116,6 @@
     </div>
 
     <script>
-        // 僅保留座號與姓名在前端，讓下拉選單秒開，完全不包含密碼
         const studentList = [
             { id: "01", name: "01李岱臻" }, { id: "02", name: "02林永喜" },
             { id: "03", name: "03林品妍" }, { id: "04", name: "04林品璇" },
@@ -130,9 +137,9 @@
         let globalData = null;
         let currentUser = null;
         let trendChartInstance = null;
+        let rankChartInstance = null;
         let diffChartInstance = null;
 
-        // 頁面一載入瞬間填入選單
         window.onload = function() {
             let select = document.getElementById('user-select');
             studentList.forEach(student => {
@@ -143,7 +150,6 @@
             });
         };
 
-        // 登入驗證（點擊後向 Google 試算表後端發請求比對密碼）
         async function handleLogin() {
             let selectedAccount = document.getElementById('user-select').value;
             let passwordInput = document.getElementById('password-input').value.trim();
@@ -153,7 +159,7 @@
                 return;
             }
             if (!passwordInput) {
-                alert("考生身分證末5碼數字");
+                alert("請輸入密碼！");
                 return;
             }
 
@@ -168,14 +174,13 @@
                     globalData = await res.json();
                 }
 
-                // 從 Google 試算表的 accounts (密碼表) 比對
                 let accounts = globalData.accounts;
                 let isValid = false;
                 let studentName = "";
 
                 for (let i = 1; i < accounts.length; i++) {
-                    let dbAccountFull = String(accounts[i][0]).trim(); // A欄：例如 "67邱詠仲"
-                    let dbPassword = String(accounts[i][1]).trim();     // B欄：密碼
+                    let dbAccountFull = String(accounts[i][0]).trim();
+                    let dbPassword = String(accounts[i][1]).trim();
 
                     if (dbAccountFull.startsWith(selectedAccount) && dbPassword === passwordInput) {
                         isValid = true;
@@ -191,12 +196,12 @@
                     document.getElementById('welcome-msg').textContent = `歡迎，${studentName}！`;
                     initDashboard();
                 } else {
-                    alert("密碼為考生身分證末5碼，請重新輸入數字！");
+                    alert("密碼錯誤，請重新輸入！");
                     loginBtn.innerHTML = originalText;
                     loginBtn.disabled = false;
                 }
             } catch (err) {
-                alert("等到花兒也謝了～ 您的網路撥號中嗎？");
+                alert("您等到花兒也謝了～ 那就開啟網路撥接！");
                 console.error(err);
                 loginBtn.innerHTML = originalText;
                 loginBtn.disabled = false;
@@ -218,6 +223,7 @@
             });
 
             renderTrendChart();
+            renderRankTrendChart();
             updateAnalysis();
         }
 
@@ -305,6 +311,76 @@
                 type: 'line',
                 data: { labels: exams, datasets: datasets },
                 options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
+            });
+        }
+
+        function renderRankTrendChart() {
+            let exams = Object.keys(globalData.scores).filter(e => globalData.scores[e].length > 1);
+            let subjects = ["國文", "英語", "數學", "社會", "自然"];
+            let studentName = currentUser.name;
+            let ranks = [];
+            let totalStudentsCount = 26;
+
+            exams.forEach(exam => {
+                let rows = globalData.scores[exam];
+                let header = rows[0];
+                let idxMap = {};
+                header.forEach((h, idx) => { idxMap[h.toString().trim()] = idx; });
+
+                let studentTotals = [];
+                for (let i = 1; i < rows.length; i++) {
+                    let name = rows[i][0];
+                    if (!name) continue;
+                    let sum = 0;
+                    subjects.forEach(sub => {
+                        sum += Number(rows[i][idxMap[sub]]) || 0;
+                    });
+                    studentTotals.push({ name: name, total: sum });
+                }
+
+                studentTotals.sort((a, b) => b.total - a.total);
+                totalStudentsCount = studentTotals.length || 26;
+
+                let myRank = null;
+                for (let i = 0; i < studentTotals.length; i++) {
+                    if (studentTotals[i].name.includes(studentName) || studentName.includes(studentTotals[i].name)) {
+                        myRank = i + 1;
+                        break;
+                    }
+                }
+                ranks.push(myRank);
+            });
+
+            let ctx = document.getElementById('rankTrendChart').getContext('2d');
+            if (rankChartInstance) rankChartInstance.destroy();
+            rankChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: exams,
+                    datasets: [{
+                        label: '班級總排名',
+                        data: ranks,
+                        borderColor: '#8b5cf6',
+                        backgroundColor: '#8b5cf6',
+                        tension: 0.2,
+                        fill: false,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            reverse: true, // 讓第一名在最上方
+                            min: 1,
+                            max: totalStudentsCount,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
             });
         }
 
