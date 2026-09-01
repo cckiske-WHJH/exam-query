@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>學生段考成績查詢與多維度分析系統</title>
+    <!-- Tailwind CSS 樣式庫 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js 圖表庫 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen p-4 sm:p-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden p-6 sm:p-8">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-center text-blue-600 mb-6">段考成績查詢與個人表現分析</h1>
+
+        <!-- 登入表單 -->
+        <div id="login-box" class="space-y-5 max-w-md mx-auto bg-gray-50 p-6 rounded-xl border">
+            <div>
+                <label class="block text-gray-700 font-semibold mb-2">選擇您的帳號（座號與姓名）：</label>
+                <select id="user-select" class="w-full border rounded-lg p-3 bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                    <option value="">-- 請選擇您的身分 --</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-gray-700 font-semibold mb-2">請輸入密碼（身分證後5碼）：</label>
+                <input type="password" id="password-input" class="w-full border rounded-lg p-3 bg-white focus:ring-2 focus:ring-blue-500 outline-none" placeholder="例如：12345">
+            </div>
+            <button onclick="handleLogin()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition shadow">登入查詢</button>
+        </div>
+
+        <!-- 查詢後的儀表板 -->
+        <div id="dashboard" class="hidden space-y-8 mt-4">
+            <div class="flex justify-between items-center border-b pb-4">
+                <h2 id="welcome-msg" class="text-xl font-bold text-gray-800"></h2>
+                <button onclick="location.reload()" class="bg-rose-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-rose-600 transition">登出</button>
+            </div>
+
+            <!-- 強弱項分析卡片 -->
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-600 p-5 rounded-r-xl shadow-sm">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
+                    <h3 class="font-bold text-blue-900 text-lg">📊 段考表現與強弱項分析</h3>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700 mr-2">選擇考次：</label>
+                        <select id="exam-select" onchange="updateAnalysis()" class="border rounded-lg px-3 py-1.5 bg-white text-sm focus:ring-2 focus:ring-blue-500 outline-none"></select>
+                    </div>
+                </div>
+                <div id="analysis-content" class="text-gray-700 space-y-2 text-sm sm:text-base"></div>
+            </div>
+
+            <!-- 圖表區域 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 歷次成績趨勢折線圖 -->
+                <div class="bg-white p-5 border rounded-xl shadow-sm">
+                    <h3 class="font-bold text-gray-700 mb-4 text-center">歷次段考成績變化趨勢</h3>
+                    <canvas id="trendChart"></canvas>
+                </div>
+                <!-- 各科與班級平均差距長條圖 -->
+                <div class="bg-white p-5 border rounded-xl shadow-sm">
+                    <h3 class="font-bold text-gray-700 mb-4 text-center">各科與班級平均差距 (分)</h3>
+                    <canvas id="diffChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 替換下方為您的 Google Apps Script 網頁應用程式網址
+        const API_URL = "https://script.google.com/macros/s/AKfycbyN5FlODeMVI8KmcMeye5KOrOWDVAP_CIty4-UObMUxEvU1JDRx-sANEhLO_rdq2Fd_aw/exec";
+
+        let globalData = null;
+        let currentUser = null;
+        let trendChartInstance = null;
+        let diffChartInstance = null;
+
+        // 頁面載入時抓取 API 資料並填入下拉選單
+        window.onload = async function() {
+            try {
+                let res = await fetch(API_URL);
+                globalData = await res.json();
+                
+                let select = document.getElementById('user-select');
+                let accounts = globalData.accounts;
+                
+                // 從第 1 列開始（跳過標題列），第 0 欄是姓名，第 1 欄是帳號
+                for (let i = 1; i < accounts.length; i++) {
+                    if (accounts[i][0] && accounts[i][1]) {
+                        let opt = document.createElement('option');
+                        opt.value = accounts[i][1]; // 帳號作為 value
+                        opt.textContent = accounts[i][0]; // 姓名顯示在選單上
+                        select.appendChild(opt);
+                    }
+                }
+            } catch (err) {
+                alert("無法連線至資料庫，請檢查 API 設定是否正確！");
+                console.error(err);
+            }
+        };
+
+        function handleLogin() {
+            let selectedAccount = document.getElementById('user-select').value;
+            let passwordInput = document.getElementById('password-input').value.trim();
+
+            if (!selectedAccount) {
+                alert("請先選擇您的帳號！");
+                return;
+            }
+            if (!passwordInput) {
+                alert("請輸入密碼！");
+                return;
+            }
+
+            let accounts = globalData.accounts;
+            let isValid = false;
+            let studentName = "";
+
+            for (let i = 1; i < accounts.length; i++) {
+                // 確保比對時將密碼轉為字串避免型態不符
+                if (String(accounts[i][1]) === String(selectedAccount) && String(accounts[i][2]) === passwordInput) {
+                    isValid = true;
+                    studentName = accounts[i][0];
+                    break;
+                }
+            }
+
+            if (isValid) {
+                currentUser = { account: selectedAccount, name: studentName };
+                document.getElementById('login-box').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                document.getElementById('welcome-msg').textContent = `歡迎回來，${studentName} 同學！`;
+                
+                initDashboard();
+            } else {
+                alert("密碼錯誤，請重新輸入！");
+            }
+        }
+
+        function initDashboard() {
+            let examSelect = document.getElementById('exam-select');
+            examSelect.innerHTML = "";
+            
+            // 篩選出有資料的考次分頁
+            Object.keys(globalData.scores).forEach(examName => {
+                let rows = globalData.scores[examName];
+                if (rows && rows.length > 1) {
+                    let opt = document.createElement('option');
+                    opt.value = examName;
+                    opt.textContent = examName;
+                    examSelect.appendChild(opt);
+                }
+            });
+
+            renderTrendChart();
+            updateAnalysis();
+        }
+
+        // 渲染歷次成績趨勢折線圖
+        function renderTrendChart() {
+            let exams = Object.keys(globalData.scores).filter(e => globalData.scores[e].length > 1);
+            let subjects = ["國文", "英語", "數學", "社會", "自然"];
+            let studentName = currentUser.name;
+
+            let subjectData = { "國文": [], "英語": [], "數學": [], "社會": [], "自然": [] };
+
+            exams.forEach(exam => {
+                let rows = globalData.scores[exam];
+                let header = rows[0];
+                let idxMap = {};
+                header.forEach((h, idx) => { idxMap[h.toString().trim()] = idx; });
+
+                let found = false;
+                for (let i = 1; i < rows.length; i++) {
+                    if (rows[i][0] === studentName) {
+                        subjects.forEach(sub => {
+                            subjectData[sub].push(Number(rows[i][idxMap[sub]]) || 0);
+                        });
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    subjects.forEach(sub => subjectData[sub].push(null));
+                }
+            });
+
+            let colors = ['#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
+            let datasets = subjects.map((sub, idx) => ({
+                label: sub,
+                data: subjectData[sub],
+                borderColor: colors[idx],
+                backgroundColor: colors[idx],
+                tension: 0.2,
+                fill: false
+            }));
+
+            let ctx = document.getElementById('trendChart').getContext('2d');
+            if (trendChartInstance) trendChartInstance.destroy();
+            trendChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: { labels: exams, datasets: datasets },
+                options: { 
+                    responsive: true, 
+                    scales: { y: { beginAtZero: true, max: 100 } } 
+                }
+            });
+        }
+
+        // 更新單次考試分析與差距長條圖
+        function updateAnalysis() {
+            let selectedExam = document.getElementById('exam-select').value;
+            if (!selectedExam) return;
+
+            let rows = globalData.scores[selectedExam];
+            let header = rows[0];
+            let idxMap = {};
+            header.forEach((h, idx) => { idxMap[h.toString().trim()] = idx; });
+
+            let studentRow = null;
+            for (let i = 1; i < rows.length; i++) {
+                if (rows[i][0] === currentUser.name) {
+                    studentRow = rows[i];
+                    break;
+                }
+            }
+
+            if (!studentRow) {
+                document.getElementById('analysis-content').innerHTML = "查無此考次的個人成績資料。";
+                return;
+            }
+
+            let subjects = ["國文", "英語", "數學", "社會", "自然"];
+            let scores = {};
+            let prValues = {};
+            let totalScore = 0;
+            let validRowsCount = rows.length - 1;
+            let classAverages = {};
+
+            subjects.forEach(sub => {
+                let subIdx = idxMap[sub];
+                let prIdx = idxMap[sub + "PR"];
+                
+                scores[sub] = Number(studentRow[subIdx]) || 0;
+                prValues[sub] = prIdx !== undefined ? (Number(studentRow[prIdx]) || "-") : "-";
+                totalScore += scores[sub];
+
+                // 計算該科班級平均
+                let subTotal = 0;
+                for (let i = 1; i < rows.length; i++) {
+                    subTotal += Number(rows[i][subIdx]) || 0;
+                }
+                classAverages[sub] = subTotal / validRowsCount;
+            });
+
+            let studentAvg = (totalScore / subjects.length).toFixed(1);
+
+            // 計算與平均差距
+            let diffs = {};
+            subjects.forEach(sub => {
+                diffs[sub] = Number((scores[sub] - classAverages[sub]).toFixed(1));
+            });
+
+            // 排序找出強弱項
+            let sortedSubjects = [...subjects].sort((a, b) => diffs[b] - diffs[a]);
+            let strongest = sortedSubjects[0];
+            let weakest = sortedSubjects[sortedSubjects.length - 1];
+
+            let html = `<p class="font-semibold text-gray-800">個人平均分數：<span class="text-blue-600">${studentAvg} 分</span></p>`;
+            html += `<p>🌟 <b>強項科目：</b> <span class="text-emerald-600 font-bold">${strongest}</span> (${scores[strongest]}分，PR ${prValues[strongest]}，高於平均 <span class="text-emerald-600 font-bold">${diffs[strongest] >= 0 ? '+' + diffs[strongest] : diffs[strongest]} 分</span>)</p>`;
+            html += `<p>⚠️ <b>弱項科目：</b> <span class="text-rose-600 font-bold">${weakest}</span> (${scores[weakest]}分，PR ${prValues[weakest]}，相對於平均 <span class="text-rose-600 font-bold">${diffs[weakest] >= 0 ? '+' + diffs[weakest] : diffs[weakest]} 分</span>)</p>`;
+            
+            let details = subjects.map(sub => `${sub}: ${scores[sub]}分(PR${prValues[sub]}, ${diffs[sub] >= 0 ? '+' + diffs[sub] : diffs[sub]}分)`).join(" | ");
+            html += `<p class="text-xs text-gray-500 mt-2 border-t pt-2">各科詳細：${details}</p>`;
+
+            document.getElementById('analysis-content').innerHTML = html;
+
+            // 渲染差距長條圖
+            let diffValues = subjects.map(sub => diffs[sub]);
+            let bgColors = diffValues.map(v => v >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(244, 63, 94, 0.7)');
+
+            let ctx = document.getElementById('diffChart').getContext('2d');
+            if (diffChartInstance) diffChartInstance.destroy();
+            diffChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: subjects,
+                    datasets: [{
+                        label: '相對於班級平均差距 (分)',
+                        data: diffValues,
+                        backgroundColor: bgColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { grid: { color: '#f3f4f6' } } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
