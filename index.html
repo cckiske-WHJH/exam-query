@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>皮克敏段考成績查詢與多維度分析系統</title>
+    <title>文中704段考成績多維度分析系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
@@ -118,7 +118,7 @@
             { id: "11", name: "11賴沛金" }, { id: "12", name: "12賴苡安" },
             { id: "13", name: "13謝苡柔" }, { id: "15", name: "15王辰祐" },
             { id: "16", name: "16林弘鎰" }, { id: "17", name: "17林裕鈁" },
-            { id: "18", name: "18邱渤洲" }, { id: "19", name: "19紀  杰" },
+            { id: "18", name: "18邱渤洲" }, { id: "19", name: "19紀    杰" },
             { id: "20", name: "20張承煜" }, { id: "21", name: "21陳佑睿" },
             { id: "22", name: "22陳利昌" }, { id: "23", name: "23游尚睿" },
             { id: "24", name: "24楊佳恩" }, { id: "25", name: "25賴誠恩" },
@@ -153,13 +153,13 @@
                 return;
             }
             if (!passwordInput) {
-                alert("請輸入密碼！");
+                alert("考生身分證末5碼數字");
                 return;
             }
 
             let loginBtn = document.querySelector("#login-box button");
             let originalText = loginBtn.innerHTML;
-            loginBtn.innerHTML = "<span>⏳</span> 驗證中...";
+            loginBtn.innerHTML = "<span>⏳</span> 等待～哦～最真的愛～";
             loginBtn.disabled = true;
 
             try {
@@ -191,12 +191,12 @@
                     document.getElementById('welcome-msg').textContent = `歡迎，${studentName}！`;
                     initDashboard();
                 } else {
-                    alert("密碼錯誤，請重新輸入！");
+                    alert("密碼為考生身分證末5碼，請重新輸入數字！");
                     loginBtn.innerHTML = originalText;
                     loginBtn.disabled = false;
                 }
             } catch (err) {
-                alert("連線至資料庫失敗，請檢查網路！");
+                alert("等到花兒也謝了～ 您的網路撥號中嗎？");
                 console.error(err);
                 loginBtn.innerHTML = originalText;
                 loginBtn.disabled = false;
